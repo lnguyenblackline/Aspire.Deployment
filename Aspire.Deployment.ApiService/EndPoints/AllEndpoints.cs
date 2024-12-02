@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Npgsql;
 
 namespace Aspire.Deployment.ApiService.EndPoints
 {
@@ -23,6 +25,13 @@ namespace Aspire.Deployment.ApiService.EndPoints
                     ))
                     .ToArray();
                 return forecast;
+            });
+
+            app.MapGet("/stock-prices", async (NpgsqlDataSource dataSource) =>
+            {
+                await using var cnn = await dataSource.OpenConnectionAsync();
+                var stockPrices = await cnn.QueryAsync("SELECT * FROM public.stock_prices");
+                return Results.Ok(stockPrices);
             });
         }
     }
