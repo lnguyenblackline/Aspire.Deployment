@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgres = builder.AddPostgres("postgres");
+var postgres = builder.AddPostgres("postgres").PublishAsAzurePostgresFlexibleServer();
 var stocksDb = postgres.AddDatabase("stocks");
 
 var cache = builder.AddRedis("local-redis");
